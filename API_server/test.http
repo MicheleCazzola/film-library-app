@@ -1,0 +1,128 @@
+GET http://localhost:3001/api/films
+
+###
+
+GET http://localhost:3001/api/films?filter=isFavorite
+
+###
+
+GET http://localhost:3001/api/films?filter=rating
+
+###
+
+GET http://localhost:3001/api/films?filter=lastMonth
+
+###
+
+GET http://localhost:3001/api/films?filter=unseen
+
+###
+
+GET http://localhost:3001/api/films?filter=pippo
+
+###
+
+GET http://localhost:3001/api/films/1
+
+###
+
+GET http://localhost:3001/api/films/6
+
+###
+
+POST http://localhost:3001/api/films
+content-type: application/json
+
+{
+    "title": "John Wick",
+    "isFavorite": 0,
+    "rating": 4,
+    "watchDate": null,
+    "userId": 2
+}
+
+###
+
+POST http://localhost:3001/api/films
+content-type: application/json
+
+{
+    "title": "John Wick",
+    "isFavorite": 0,
+    "rating": 7,
+    "watchDate": "2024-02-10",
+    "userId": 2
+}
+
+###
+
+PUT http://localhost:3001/api/films/10
+content-type: application/json
+
+{
+    "title": "John Wick",
+    "isFavorite": 1,
+    "rating": 4,
+    "watchDate": "2024-02-10",
+    "userId": 2
+}
+
+###
+
+PUT http://localhost:3001/api/films/15
+content-type: application/json
+
+{
+    "title": "John Wick",
+    "isFavorite": 1,
+    "rating": 4,
+    "watchDate": "2024-02-10",
+    "userId": 2
+}
+
+###
+
+POST http://localhost:3001/api/films/7/rating
+content-type: application/json
+
+{
+    "rating": 2
+}
+
+###
+
+
+POST http://localhost:3001/api/films/7/rating
+content-type: application/json
+
+{
+    "rating": 6
+}
+
+###
+
+POST http://localhost:3001/api/films/12/isFavorite
+content-type: application/json
+
+{
+    "isFavorite": 0
+}
+
+###
+
+POST http://localhost:3001/api/films/12/isFavorite
+content-type: application/json
+
+{
+    "isFavorite": 2
+}
+
+###
+
+DELETE http://localhost:3001/api/films/12
+
+###
+
+DELETE http://localhost:3001/api/films/17
+
+###

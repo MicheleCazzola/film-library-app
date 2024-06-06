@@ -1,0 +1,29 @@
+#films-content {
+    padding-top: 4.5rem;
+}
+
+#films-list i.bi {
+    cursor: pointer;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#films-list i.bi.bi-star-fill, #films-list i.bi.bi-star:hover {
+    color: #f0ad4e;
+}
+
+#films-list i.bi {
+    color: black;
+}
+
+#films-list i.bi.bi-pencil:hover {
+    color: #0033cc;
+}
+
+#films-list i.bi.bi-trash3:hover {
+    color: #e00000;
+}
+
+#delete {
+    padding-top: 0;
+}

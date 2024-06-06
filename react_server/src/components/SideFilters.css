@@ -1,0 +1,21 @@
+#sidebar-content {
+    padding-top: 4.5rem;
+}
+
+#film-filters a {
+    text-decoration: none;
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    border-radius: 5px;
+}
+
+#film-filters a.active {
+    background-color: blue;
+    color: white;
+}
+
+#film-filters a:not(.active):hover {
+    background-color: cyan;
+}

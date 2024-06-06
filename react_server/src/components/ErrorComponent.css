@@ -1,0 +1,10 @@
+#error-message {
+    padding-top: 4.5rem;
+}
+
+#back-to-previous {
+    position: fixed;
+    text-align: end;
+    bottom: 1rem;
+    right: 1rem;
+}
