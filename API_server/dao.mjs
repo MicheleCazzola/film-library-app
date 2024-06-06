@@ -4,18 +4,45 @@
 import sqlite from 'sqlite3';
 import {Film} from './FLmodels.mjs';
 import dayjs from 'dayjs';
+import crypto from 'crypto';
 
 // open the database
 const db = new sqlite.Database('films.db', (err) => {
   if (err) throw err;
 });
 
+export const getUser = (email, password) => {
+  return new Promise((resolve, reject) => {
+    const sql = 'SELECT * FROM users WHERE email = ?';
+    db.get(sql, [email], (err, row) => {
+      if (err) { 
+        reject(err); 
+      }
+      else if (row === undefined) { 
+        resolve(false); 
+      }
+      else {
+        const user = {id: row.id, username: row.email, name: row.name};
+        
+        crypto.scrypt(password, row.salt, 32, function(err, hashedPassword) {
+          if (err) reject(err);
+          if(!crypto.timingSafeEqual(Buffer.from(row.password, 'hex'), hashedPassword))
+            resolve(false);
+          else
+            resolve(user);
+        });
+      }
+    });
+  });
+};
+
 /** FILMS **/
 // get all the films
-export const listFilms = () => {
+export const listFilms = (userId) => {
+  console.log("ALL FILMS");
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM films';
-    db.all(sql, [], (err, rows) => {
+    const sql = 'SELECT * FROM films WHERE userId = ?';
+    db.all(sql, [userId], (err, rows) => {
       if (err){
         reject(err);
       }
@@ -27,7 +54,7 @@ export const listFilms = () => {
   });
 }
 
-export const listFilteredFilms = (name) => {
+export const listFilteredFilms = (name, userId) => {
 
   const filters = {
     "filter-favorites": films => films.filter(film => film.isFavorite == 1),
@@ -37,8 +64,8 @@ export const listFilteredFilms = (name) => {
   };
 
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM films";
-    db.all(sql, [], (err, rows) => {
+    const sql = "SELECT * FROM films WHERE userId = ?";
+    db.all(sql, [userId], (err, rows) => {
       if (err){
         reject(err);
       }
@@ -88,14 +115,12 @@ export const getMaxId = () => {
   });
 }
 
-export const addFilm = (body, id) => {
-
-  console.log(body, id);
+export const addFilm = (body, userId) => {
 
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO films(title, isFavorite, rating, watchDate, userId)
                   VALUES(?,?,?,?,?)`;
-    db.run(sql, [body.title, body.isFavorite, body.rating, body.watchDate, body.userId], function(err) {
+    db.run(sql, [body.title, body.isFavorite, body.rating, body.watchDate, userId], function(err) {
       console.log(err);
       if(err) {
         reject(err);
@@ -107,10 +132,11 @@ export const addFilm = (body, id) => {
   });
 }
 
-export const updateFilm = (body, id) => {
+export const updateFilm = (body, filmId, userId) => {
+  console.log(filmId, userId);
   return new Promise((resolve, reject) => {
     const sql = "UPDATE films SET title = ?, isFavorite = ?, rating = ?, watchDate = ?, userId = ? WHERE id = ?";
-    db.run(sql, [body.title, body.isFavorite, body.rating, body.watchDate, body.userId, id], function(err) {
+    db.run(sql, [body.title, body.isFavorite, body.rating, body.watchDate, userId, filmId], function(err) {
       if(err) {
         reject(err);
       }

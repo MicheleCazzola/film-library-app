@@ -24,7 +24,7 @@ function Films(props) {
 
         setFilms((oldFilms) => oldFilms.map(oldFilm => {
             if (oldFilm.id === filmId) {
-                return new Film({...oldFilm, favorite: favorite}) 
+                return new Film(filmId, oldFilm.title, favorite, oldFilm.userId, oldFilm.date, oldFilm.rating) 
             }
             return oldFilm;
         }));
@@ -37,24 +37,22 @@ function Films(props) {
     }
 
     const handleRating = async (filmId, rating) => {
-        /*
+
+        if (films.filter(film => film.id === filmId)[0].rating == rating) {
+            return;
+        }
+
         setFilms((oldFilms) => oldFilms.map(oldFilm => {
             if (oldFilm.id === filmId) {
-                return new Film({...oldFilm, rating: rating}) 
+                return new Film(filmId, oldFilm.title, oldFilm.favorite, oldFilm.userId, oldFilm.date, rating);
             }
             return oldFilm;
-        }));*/
+        }));
         
-        console.log("After state");
-        films.forEach(film => console.log(film.rating));
-
+        
         API.updateRating(filmId, rating)
             .then(() => {
-                console.log("Before get");
-                films.forEach(film => console.log(film.rating));
                 getFilms();
-                console.log("After get");
-                films.forEach(film => console.log(film.rating));
             })
             .catch((err) => console.log(err));
     }
@@ -91,9 +89,6 @@ function FilmList(props) {
 }
 
 function FilmItem(props) {
-
-    console.log("Rendering");
-    console.log(props.film.rating);
 
     return(
         <ListGroupItem className="row">

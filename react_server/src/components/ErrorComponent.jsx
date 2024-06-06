@@ -1,18 +1,17 @@
-import { Col } from "react-bootstrap";
+import { Button, Col } from "react-bootstrap";
 import "./ErrorComponent.css"
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ErrorComponent () {
-    const location = useLocation();
+    const navigate = useNavigate();
     console.log("ERROR");
     return (
         <>
             <Col lg={9}>
                 <h1 id="error-message">Something went wrong</h1> 
                 <footer id="back-to-previous">    
-                    <Link to={location.state ? location.state.nextPage : "/"}>Go back to previous page</Link>
+                    <Button onClick={() => navigate("/")} >Go back to previous page</Button>
                 </footer>
-                
             </Col>
         </>
     );

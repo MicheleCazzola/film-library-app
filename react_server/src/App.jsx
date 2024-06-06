@@ -11,6 +11,8 @@ import { Container, Row } from 'react-bootstrap';
 import SideFilters from './components/SideFilters';
 import FilmForm from './components/FilmForm';
 import ErrorComponent from './components/ErrorComponent';
+import LoginForm from './components/LoginForm';
+import API from './API.mjs';
 
 const filmLibrary = new FilmLibrary();
 
@@ -19,11 +21,26 @@ function App() {
     const conditions = filmLibrary.filterConditions;
 	const filters = Object.keys(conditions);
 
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [user, setUser] = useState(false)
+
+	useEffect(() => {
+		const getUserInfo = async () => {
+			const user = await API.getUserInfo();
+			setUser(user);
+			//user ? setIsLoggedIn(true) : setIsLoggedIn(false);
+		}
+		if (isLoggedIn) getUserInfo()
+	}, [isLoggedIn]);
+
 	return (
 		<Routes>
+			<Route path='/login' element={
+				!isLoggedIn && <LoginForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+			}></Route>
 			<Route path="/" element={
-				<>
-					<NavHeader></NavHeader>
+				isLoggedIn && <>
+					<NavHeader isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} name={user ? user.name: "No user"}></NavHeader>
 					<Container fluid className="d-flex flex-column flex-grow-1">
 							<Row className="min-vh-100 flex-grow-1">
 								<SideFilters filters={filters} URLs={URLs} ></SideFilters>
@@ -33,7 +50,7 @@ function App() {
 				</>
 			}>
 				<Route index element={
-					<>
+					isLoggedIn && <>
 						<MainContent urlDict={URLs} conditions={conditions} />	
 						<NewFilm></NewFilm>
 					</>

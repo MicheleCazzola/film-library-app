@@ -1,9 +1,9 @@
-import { Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 
 function Title(props) {
     return (
         <Row as="h2">
-            <span>{props.title}</span>
+            <Col lg={12}>{props.title}</Col>
         </Row>
     );
 }

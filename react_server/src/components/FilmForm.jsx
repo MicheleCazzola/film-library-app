@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useState } from "react";
-import { Button, Col, Form } from "react-bootstrap";
+import { Alert, Button, Col, Form } from "react-bootstrap";
 import Title from "./Title"
 import "./FilmForm.css"
 import validator from "validator";
@@ -21,6 +21,8 @@ function FilmForm(props) {
     const [rating, setRating] = useState(film ? (film.rating || 0) : 0);
     const [valid, setValid] = useState({"title": true});
 
+    const [waiting, setWaiting] = useState(false);
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -31,18 +33,24 @@ function FilmForm(props) {
 
         if (validTitle){
             const newFilm = {title, favorite, date, rating};
+            setWaiting(true);
             if (!film) {
-                const filmToInsert = {...newFilm, userId: 1};
-                console.log(filmToInsert);
-                API.addFilm(filmToInsert)
-                    .then(() => navigate(nextPage))
-                    .catch(err => console.log(err));
+                //const filmToInsert = newFilm;
+                console.log(newFilm);
+                API.addFilm(newFilm)
+                    .then(() => {
+                        //setWaiting(true);
+                        navigate(nextPage);
+                    })
+                    .catch(err => console.log(err))
+                    .finally(() => setWaiting(false));
             }
             else {
-                const filmToInsert = {...newFilm, userId: 1};
-                API.updateFilm(filmToInsert, film.id)
+                //const filmToInsert = newFilm;
+                API.updateFilm(newFilm, film.id)
                     .then(() => navigate(nextPage))
-                    .catch(err => console.log(err));
+                    .catch(err => console.log(err))
+                    .finally(() => setWaiting(false));
             }
         }
     }
@@ -57,6 +65,7 @@ function FilmForm(props) {
         <Col lg={9} id="films-form" className="align-items-center">
         {   
             <>
+                {waiting && <Alert variant="light">Please wait</Alert>}
                 <Title title={props.buttonName === "Add" ? "Add a new film" : `Update film "${film.title}"`}/>
                 <Form onSubmit={handleSubmit} className="my-2">
                     <Form.Group className='mb-3'>
